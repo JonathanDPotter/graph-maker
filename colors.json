@@ -9,9 +9,20 @@
     "darkOrange": "#ca6702",
     "redOrange": "#bb3e03",
     "scarlet": "#ae2012",
-    "red": "#9b2226",
-    "white": "#eee"
+    "red": "#9b2226"
   },
+  "themeArray": [
+    "#001219",
+    "#005f73",
+    "#0a9396",
+    "#94d2bd",
+    "#e9d8a6",
+    "#ee9b00",
+    "#ca6702",
+    "#bb3e03",
+    "#ae2012",
+    "#9b2226"
+  ],
   "user": [
     [
       "#fec5bb",

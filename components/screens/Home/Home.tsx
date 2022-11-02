@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, FlatList, View } from "react-native";
 import tw from "twrnc";
-import { Rect, Svg } from "react-native-svg";
+import { G, Line, Rect, Svg } from "react-native-svg";
 // components
 import Screen from "../../shared/Screen/Screen";
 import Button from "../../shared/Button/Button";
 import GraphType from "../../../enums/graphType";
 import GraphTypeChooserModal from "../../modals/GraphTypeChooserModal";
 import PaletteChooserModal from "../../modals/PaletteChooserModal";
-import AddDataModal from "../../modals/AddDataModal";
+import EditDataModal from "../../modals/EditDataModal";
 // utilities
 import Idata from "../../../interfaces/data";
 import { theme, user } from "../../../colors.json";
+import { max, scaleBand, scaleLinear } from "d3";
+import Bar from "../../graphs/Bar";
 
 const Home = () => {
   const [dims, setDims] = useState(Dimensions.get("window"));
@@ -19,10 +21,18 @@ const Home = () => {
   const [gtModalOpen, setGtModalOpen] = useState(false);
   const [palette, setPalette] = useState<string[]>(user[0]);
   const [pModalOpen, setPModalOpen] = useState(false);
-  const [data, setData] = useState<Idata[]>(
-    new Array(10).fill({ name: "", units: 0 })
-  );
+  const [data, setData] = useState<Idata[]>([{ name: "", units: null }]);
   const [dataModalOpen, setDataModalOpen] = useState(false);
+  const [background, setBackground] = useState(theme.black);
+
+  const y = scaleLinear()
+    .domain([0, max(data, (d) => d.units)! + 10])
+    .range([dims.width * 0.9, 0]);
+
+  const x = scaleBand()
+    .domain(data.map((d) => d.name))
+    .range([0, dims.width * 0.9])
+    .padding(0.1);
 
   useEffect(() => {
     setDims(Dimensions.get("window"));
@@ -33,23 +43,46 @@ const Home = () => {
       <Svg
         height={dims.width * 0.9}
         width={dims.width * 0.9}
-        style={tw`border-solid border-8 border-[${theme.redOrange}] rounded-lg mt-8 bg-[${theme.champagne}]`}
-      ></Svg>
+        style={tw`rounded-lg mt-8 bg-[${background}]`}
+      >
+        {graphType === GraphType.bar && (
+          <Bar {...{ dims, data, x, y, palette }} />
+        )}
+      </Svg>
       <View style={tw`flex-1 py-4 w-[100%] items-center justify-around`}>
-        <Button title="Add Data" onPress={() => setDataModalOpen(true)} />
-        <Button title="Choose Palette" onPress={() => setPModalOpen(true)} />
+        <Button
+          title="Edit Data"
+          onPress={() => setDataModalOpen(true)}
+          style={tw`w-[75%]`}
+        />
+        <Button
+          title="Choose Palette"
+          onPress={() => setPModalOpen(true)}
+          style={tw`w-[75%]`}
+        />
         <Button
           title="Choose Graph Type"
           onPress={() => setGtModalOpen(true)}
+          style={tw`w-[75%]`}
         />
       </View>
-      <GraphTypeChooserModal
-        {...{ setGraphType, setGtModalOpen, gtModalOpen, graphType }}
+      <EditDataModal
+        {...{ setData, setDataModalOpen, dataModalOpen, data, dims }}
       />
       <PaletteChooserModal
-        {...{ palette, setPalette, pModalOpen, setPModalOpen }}
+        {...{
+          palette,
+          setPalette,
+          pModalOpen,
+          setPModalOpen,
+          background,
+          setBackground,
+          dims,
+        }}
       />
-      <AddDataModal {...{ setData, setDataModalOpen, dataModalOpen, data }} />
+      <GraphTypeChooserModal
+        {...{ setGraphType, setGtModalOpen, gtModalOpen, graphType, dims }}
+      />
     </Screen>
   );
 };

@@ -18,7 +18,7 @@ const Text: FC<Iprops> = ({ children, style, onPress }) => {
     <RNText
       onPress={onPress}
       style={[
-        tw`text-[${theme.champagne}]`,
+        tw`text-[${theme.blueGreen}] font-bold`,
         style,
         fontsLoaded ? { fontFamily: "VarelaRound-Regular" } : null,
       ]}

@@ -15,13 +15,15 @@ const Button: FC<Iprops> = ({ title, style, textStyle, onPress }) => {
   return (
     <Pressable
       style={[
-        tw`px-4 py-2 m-2 items-center border-[${theme.orange}] bg-[${theme.red}] border-2 rounded`,
+        tw`px-4 py-2 m-2 items-center border-[${theme.viridian}] bg-[${theme.blueGreen}] border-2 rounded`,
         style,
       ]}
       onPress={onPress}
       android_ripple={{ color: theme.sapphire }}
     >
-      <Text style={[tw`text-lg`, textStyle]}>{title}</Text>
+      <Text style={[tw`text-lg text-[${theme.black}]`, textStyle]}>
+        {title}
+      </Text>
     </Pressable>
   );
 };

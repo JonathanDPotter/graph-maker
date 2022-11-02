@@ -1,4 +1,4 @@
-import { Modal, View } from "react-native";
+import { Modal, ScaledSize, View } from "react-native";
 import React, { Dispatch, FC, SetStateAction } from "react";
 import GraphType from "../../enums/graphType";
 import tw from "twrnc";
@@ -12,6 +12,7 @@ interface Iprops {
   setGtModalOpen: Dispatch<SetStateAction<boolean>>;
   gtModalOpen: boolean;
   graphType: GraphType;
+  dims: ScaledSize;
 }
 
 const GraphTypeChooserModal: FC<Iprops> = ({
@@ -19,6 +20,7 @@ const GraphTypeChooserModal: FC<Iprops> = ({
   setGtModalOpen,
   gtModalOpen,
   graphType,
+  dims,
 }) => {
   return (
     <Modal
@@ -28,7 +30,11 @@ const GraphTypeChooserModal: FC<Iprops> = ({
       onRequestClose={() => setGtModalOpen(false)}
     >
       <View style={tw`${backModalStyles}`}>
-        <View style={tw`${foreModalStyles}`}>
+        <View
+          style={tw`${foreModalStyles} items-center h-[${
+            dims.height * 0.8
+          }px] w-[${dims.width * 0.8}px]`}
+        >
           <Text style={tw`text-[2rem]`}>Current Type: {graphType}</Text>
           <Button title="Bar" onPress={() => setGraphType(GraphType.bar)} />
           <Button title="Pie" onPress={() => setGraphType(GraphType.pie)} />
